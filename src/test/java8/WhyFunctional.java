@@ -3,16 +3,19 @@ package test.java8;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class WhyFunctional {
 
    public static void main(String args[]){
       
-	  List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
+	  List<Integer> list = Arrays.asList(1,4, 4, 3, 2, 5, 6, 7, 8, 9);
 		      
       System.out.println("Print EVEN NUMBERS:");
       evalEvenWithoutPred(list);
       
+      useSortedAndDistinct(list);
      // eval(list, n -> n%2 == 0);
     
      /* eval(list, new Predicate<Integer>() {
@@ -25,15 +28,30 @@ public class WhyFunctional {
 	});*/
       
       System.out.println("Print ODD NUMBERS:");
-      evalOddWithoutPred(list);
+     // evalOddWithoutPred(list);
      
-   eval(list, n-> n%2 != 0 );
+      //eval(list, n-> n%2 != 0 );
 		
       System.out.println("Print numbers MULTIPLE 0f 5");
-      evalMultiple5WithoutPred(list);
+      //evalMultiple5WithoutPred(list);
       
     //  eval(list, n-> n%5 == 0 );*/
    }
+
+
+/**
+ * @param list
+ */
+private static void useSortedAndDistinct(List<Integer> list) {
+	System.out.println(
+    		  list
+    		  .stream()
+    		  .sorted()
+    		  .distinct()
+    		  .filter(n->n%2==0)
+    		  .collect(Collectors.toList())
+    		  );
+}
 	
    
    public static void evalEvenWithoutPred(List<Integer> list) {

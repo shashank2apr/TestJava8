@@ -6,17 +6,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.ToIntFunction;
-import java.util.stream.Collectors;
-
-import org.omg.CORBA.INTERNAL;
 
 public class TestMethodReference {
 
-	static ExecutorService pool = Executors.newFixedThreadPool(10);
+	static ExecutorService pool = Executors.newFixedThreadPool(20);
 
 	public static void main(String[] args) {
 
@@ -30,11 +25,8 @@ public class TestMethodReference {
 		compareStreams(list);
 
 		/*
-		 * for(Runnable r : list){ System.out.println(r); }
-		 * 
-		 * list.forEach( (r) -> System.out.println(r));
-		 * 
-		 * list.forEach( System.out::println);
+		 * for(Runnable r : list){ System.out.println(r); } list.forEach( (r) ->
+		 * System.out.println(r)); list.forEach( System.out::println);
 		 */
 		// before Java 8
 		// oldIteration(list);
@@ -53,8 +45,7 @@ public class TestMethodReference {
 	 * @param list
 	 * @param runnable
 	 */
-	private static void addSameRunnableNTimesToList(List<Runnable> list,
-			Runnable runnable, int n) {
+	private static void addSameRunnableNTimesToList(List<Runnable> list, Runnable runnable, int n) {
 		while (n-- > 0)
 			list.add(runnable);
 	}
@@ -94,7 +85,7 @@ public class TestMethodReference {
 
 	private static void compareStreams(List<Runnable> List) {
 
-		List<Integer> intList = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9,10);
+		List<Integer> intList = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
 		long start = getTime();
 
@@ -102,34 +93,23 @@ public class TestMethodReference {
 		 * System.out.println(intList.parallelStream() .filter(i -> i % 2 == 0)
 		 * .map(e -> e * 2) .reduce(0, Integer::sum));
 		 */
-		System.out.println(
-				intList
-				.parallelStream()
-				.filter(r -> r % 2 == 0)
-				.mapToInt(perform())
-				.sum()
-				);
+		System.out.println(intList.parallelStream().filter(r -> r % 2 == 0).mapToInt(perform()).sum());
 		long end = getTime();
 
-		double parallel = (end - start)/1e09;
+		double parallel = (end - start) / 1e09;
 
 		start = getTime();
-		/*System.out.println(
-				intList
-				.stream()
-				.filter(r -> r % 1 == 0)
-				.map(r->r*2)
-				.reduce(0, perform() )
-				);*/
-		
+		/*
+		 * System.out.println( intList .stream() .filter(r -> r % 1 == 0)
+		 * .map(r->r*2) .reduce(0, perform() ) );
+		 */
+
 		end = getTime();
 
-		double serial = (end - start)/1e09;
-		System.out.println("parallel : " + parallel + " serial :" + serial
-				+ "parallel < serial = " + (parallel < serial));
+		double serial = (end - start) / 1e09;
+		System.out.println(
+				"parallel : " + parallel + " serial :" + serial + "parallel < serial = " + (parallel < serial));
 	}
-
-	
 
 	private static ToIntFunction<? super Integer> perform() {
 		try {
@@ -137,7 +117,7 @@ public class TestMethodReference {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		return e->e*2;
+		return e -> e * 2;
 	}
 
 	private static long getTime() {
